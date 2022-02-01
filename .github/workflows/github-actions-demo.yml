@@ -20,7 +20,5 @@ jobs:
       - run: ./cc-test-reporter before-build
       - run: make report
         env:
-          JACOCO_SOURCE_PATH: src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
-      - run: ./cc-test-reporter upload-coverage
-        env:
+          JACOCO_SOURCE_PATH: src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco ./cc-test-reporter upload-coverage
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_SECRET }}
