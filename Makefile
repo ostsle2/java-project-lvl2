@@ -12,4 +12,4 @@ build: # сборка и проверка линтером
 test:
 	./gradlew test
 report:
-		./gradlew jacocoTestReport
+	./gradlew jacocoTestReport
