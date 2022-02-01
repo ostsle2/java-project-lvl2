@@ -18,7 +18,10 @@ jobs:
       - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - run: chmod +x ./cc-test-reporter
       - run: ./cc-test-reporter before-build
-      - run: make report
+      - run: make reports
+      - run: ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco
         env:
-          JACOCO_SOURCE_PATH: src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco ./cc-test-reporter upload-coverage
-          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_SECRET }}
+          JACOCO_SOURCE_PATH: src/main/java
+      - run: ./cc-test-reporter upload-coverage
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
