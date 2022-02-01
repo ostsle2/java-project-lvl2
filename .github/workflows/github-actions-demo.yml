@@ -13,8 +13,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '16'
-      - name: Build with Gradle
-        run: make build
       - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - run: chmod +x ./cc-test-reporter
       - run: ./cc-test-reporter before-build
