@@ -15,11 +15,19 @@ jobs:
           java-version: '16'
       - name: Build with Gradle
         run: make build
-      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-      - run: chmod +x ./cc-test-reporter
-      - run: ./cc-test-reporter before-build
-        env:
-          JACOCO_SOURCE_PATH: src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/test/jacoco/jacocoTestReport.xml --input-type jacoco
-      - run: ./cc-test-reporter upload-coverage
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_SECRET }}
+#      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#      - run: chmod +x ./cc-test-reporter
+#      - run: ./cc-test-reporter before-build
+#        env:
+#          JACOCO_SOURCE_PATH: src/main/java ./cc-test-reporter format-coverage build/reports/jacoco/test/jacoco/jacocoTestReport.xml --input-type jacoco
+#      - run: ./cc-test-reporter upload-coverage
+#        env:
+#          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_SECRET }}
+     - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v3.0.0
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CODECLIMATE_SECRET}}
+        JACOCO_SOURCE_PATH: "${{github.workspace}}/src/main/java"
+      with:
+        coverageCommand: make report
+        coverageLocations: ${{github.workspace}}/build/reports/jacoco/test/jacocoTestReport.xml:jacoco
