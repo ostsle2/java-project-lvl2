@@ -47,9 +47,9 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.22.0'
 }
 
-checkstyle {
-    toolVersion '8.41'
-}
+//checkstyle {
+//    toolVersion '8.41'
+//}
 //jacoco {
 //    toolVersion = "0.8.7"
 //    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
