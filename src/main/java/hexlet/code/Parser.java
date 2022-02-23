@@ -16,7 +16,7 @@ public class Parser {
     private static ObjectMapper getObjectMapper(String fileExtension) {
         if (fileExtension.endsWith(".json")) {
             return new ObjectMapper();
-        } else if (fileExtension.endsWith(".yaml")) {
+        } else if (fileExtension.endsWith(".yaml") || fileExtension.endsWith(".yml")) {
             return new ObjectMapper(new YAMLFactory());
         } else {
             throw new RuntimeException("Cannot parse file with extension: " + fileExtension);
