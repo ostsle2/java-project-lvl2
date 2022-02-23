@@ -8,18 +8,14 @@ import java.io.IOException;
 import java.util.Map;
 
 public class Parser {
-    public static Map<String, Object> parseToMap(String contents, String type) throws IOException {
-        return getObjectMapper(type).readValue(contents, new TypeReference<>() {
-        });
-    }
 
-    private static ObjectMapper getObjectMapper(String fileExtension) {
-        if (fileExtension.endsWith(".json")) {
-            return new ObjectMapper();
-        } else if (fileExtension.endsWith(".yaml") || fileExtension.endsWith(".yml")) {
-            return new ObjectMapper(new YAMLFactory());
-        } else {
-            throw new RuntimeException("Cannot parse file with extension: " + fileExtension);
-        }
+    public static Map<String, Object> parse(String contents, String type) throws IOException {
+        final ObjectMapper objectMapper = switch (type) {
+            case "yml", "yaml" -> new ObjectMapper(new YAMLFactory());
+            case "json" -> new ObjectMapper();
+            default -> throw new RuntimeException();
+        };
+        return objectMapper.readValue(contents, new TypeReference<>() {
+        });
     }
 }

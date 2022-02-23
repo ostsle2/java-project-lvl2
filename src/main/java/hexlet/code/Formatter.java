@@ -11,7 +11,8 @@ public class Formatter {
         return switch (formatterName) {
             case "json" -> new Json();
             case "plain" -> new Plain();
-            default -> new Stylish();
+            case "stylish" -> new Stylish();
+            default -> throw new RuntimeException();
         };
     }
 }

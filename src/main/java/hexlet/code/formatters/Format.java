@@ -1,12 +1,12 @@
 package hexlet.code.formatters;
 
-import hexlet.code.Status;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface Format {
-    String format(Map<String, Status> diffMap,
-                  Map<String, Object> firstMap,
-                  Map<String, Object> secondMap) throws IOException;
+
+
+    String format(List<Map<String, Object>> buildDiff) throws JsonProcessingException;
 }

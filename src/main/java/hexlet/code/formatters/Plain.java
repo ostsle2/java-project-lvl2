@@ -8,26 +8,26 @@ import java.util.Map;
 
 public final class Plain implements Format {
 
-    public String format(Map<String, Status> diffMap,
-                         Map<String, Object> firstMap,
-                         Map<String, Object> secondMap) {
+    public String format(List<Map<String, Object>> diffs) {
 
-        StringBuilder builder = new StringBuilder();
-
-        for (Map.Entry<String, Status> entry : diffMap.entrySet()) {
-            String key = entry.getKey();
-            Status difference = entry.getValue();
-            switch (difference) {
-                case CHANGED -> builder.append(change(key, firstMap.get(key), secondMap.get(key)));
-                case REMOVED -> builder.append(remove(key));
-                case ADDED -> builder.append(add(key, secondMap.get(key)));
+        StringBuilder sb = new StringBuilder();
+        for (Map<String, Object> diff : diffs) {
+            String fieldName = (String) diff.get("fieldName");
+            Status s = (Status) diff.get("status");
+            ((Status) diff.get("status")).getValue();
+            switch (s) {
+                case REMOVED -> sb.append(String.format("Property '%s' was removed%n", fieldName));
+                case ADDED -> sb.append(String.format("Property '%s' was added with value: %s%n", fieldName,
+                        toString(diff.get("newValue"))));
+                case CHANGED -> sb.append(String.format("Property '%s' was updated. From %s to %s%n", fieldName,
+                        toString(diff.get("oldValue")),
+                        toString(diff.get("newValue"))));
                 case UNCHANGED -> {
                 }
                 default -> throw new IllegalArgumentException();
             }
         }
-        builder.deleteCharAt(builder.lastIndexOf("\n"));
-        return builder.toString().replaceAll("\r", "");
+        return sb.deleteCharAt(sb.length() - 1).toString();
     }
 
     private static boolean isComplex(Object obj) {
@@ -36,26 +36,6 @@ public final class Plain implements Format {
 
     public static boolean isString(Object obj) {
         return obj instanceof String;
-    }
-
-    private static StringBuilder change(String key, Object objFirstContent, Object objSecondContent) {
-        return new StringBuilder("Property '")
-                .append(key).append("' was updated. From ")
-                .append(toString(objFirstContent)).append(" to ")
-                .append(toString(objSecondContent)).append(System.lineSeparator());
-    }
-
-    private static StringBuilder remove(String key) {
-        return new StringBuilder("Property '")
-                .append(key)
-                .append("' was removed")
-                .append(System.lineSeparator());
-    }
-
-    private static StringBuilder add(String key, Object obj) {
-        return new StringBuilder("Property '")
-                .append(key).append("' was added with value: ")
-                .append(toString(obj)).append(System.lineSeparator());
     }
 
     private static String toString(Object obj) {

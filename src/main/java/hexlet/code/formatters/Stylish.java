@@ -2,53 +2,28 @@ package hexlet.code.formatters;
 
 import hexlet.code.Status;
 
+import java.util.List;
 import java.util.Map;
 
 public final class Stylish implements Format {
 
-    public String format(Map<String, Status> diffMap,
-                         Map<String, Object> firstMap,
-                         Map<String, Object> secondMap) {
+    public String format(List<Map<String, Object>> diffs) {
 
-        StringBuilder builder = new StringBuilder("{" + System.lineSeparator());
-        for (Map.Entry<String, Status> entry : diffMap.entrySet()) {
-            String key = entry.getKey();
-            Status difference = entry.getValue();
-            switch (difference) {
-                case UNCHANGED -> builder.append(doNotChange(key, firstMap.get(key)));
-                case CHANGED -> builder.append(change(key, firstMap.get(key), secondMap.get(key)));
-                case REMOVED -> builder.append(remove(key, firstMap.get(key)));
-                default -> builder.append(add(key, secondMap.get(key)));
+        StringBuilder sb = new StringBuilder("{");
+        for (Map<String, Object> diff : diffs) {
+            String fieldName = (String) diff.get("fieldName");
+            Status s = (Status) diff.get("status");
+            switch (s) {
+                case REMOVED -> sb.append("\n  - ").append(fieldName).append(": ").append(diff.get("oldValue"));
+                case ADDED -> sb.append("\n  + ").append(fieldName).append(": ").append(diff.get("newValue"));
+                case UNCHANGED -> sb.append("\n    ").append(fieldName).append(": ").append(diff.get("oldValue"));
+                default -> {
+                    sb.append("\n  - ").append(fieldName).append(": ").append(diff.get("oldValue"));
+                    sb.append("\n  + ").append(fieldName).append(": ").append(diff.get("newValue"));
+                }
             }
         }
-        return builder.append("}").toString();
-    }
-
-    private static StringBuilder doNotChange(String key, Object obj) {
-        return new StringBuilder("    ")
-                .append(key)
-                .append(": ")
-                .append(obj)
-                .append(System.lineSeparator());
-    }
-
-    private static StringBuilder change(String key, Object objFirstFile, Object objSecondFile) {
-        return new StringBuilder().append(remove(key, objFirstFile)).append(add(key, objSecondFile));
-    }
-
-    private static StringBuilder remove(String key, Object obj) {
-        return new StringBuilder("  - ")
-                .append(key)
-                .append(": ")
-                .append(obj)
-                .append(System.lineSeparator());
-    }
-
-    private static StringBuilder add(String key, Object obj) {
-        return new StringBuilder("  + ")
-                .append(key)
-                .append(": ")
-                .append(obj)
-                .append(System.lineSeparator());
+        sb.append("\n}");
+        return sb.toString();
     }
 }

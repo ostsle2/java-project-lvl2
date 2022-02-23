@@ -5,7 +5,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 
@@ -27,12 +26,10 @@ public final class App implements Callable<String> {
 
     public App() {
     }
-    private static final String PATH = "src/test/java/resources/fixtures/";
+
     @Override
     public String call() throws Exception {
-        String s1 = Paths.get(path1).isAbsolute() ? path1 : PATH + path1;
-        String s2 = Paths.get(path2).isAbsolute() ? path2 : PATH + path2;
-        return Differ.generate(s1, s2, format);
+        return Differ.generate(path1, path2, format);
     }
 
     public static void main(String[] args) {
